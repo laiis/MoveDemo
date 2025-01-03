@@ -2,9 +2,11 @@ package oo.cc.strategies.thebest;
 
 import oo.cc.nodes.Node;
 import oo.cc.nodes.Space;
-import oo.cc.steps.*;
-import oo.cc.strategies.Strategy;
+import oo.cc.steps.Direct;
+import oo.cc.steps.NodeQueue;
+import oo.cc.steps.Step;
 import oo.cc.steps.StepImpl;
+import oo.cc.strategies.Strategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,6 @@ public class TheBestStrategy implements Strategy {
         Step step;
         boolean isAllMove = false;
         long amount = 0;
-        StepStack stepStack = new StepStack();
         NodeQueue<Node> nodeQueue = new NodeQueue<>();
 
         // initial
@@ -53,7 +54,6 @@ public class TheBestStrategy implements Strategy {
 
                 if (currentNode.getPriority() >= 0) {
                     step = new StepImpl(currentNode);
-                    stepStack.push(step);
 
                     boolean isSuccess = step.move();
                     if (isSuccess) {
