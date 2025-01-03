@@ -8,17 +8,14 @@ public interface Step {
 
     boolean isNoWay();
 
+    void reset();
+
     static void showList(Node somenode) {
-        Node start = somenode;
-        Node temp;
-        while ((temp = start.getPrev()) != null) {
-            start = temp;
-        }
-        temp = start;
+        Node start = findStart(somenode);
         do {
-            System.out.print(temp.getName() + " ");
-            temp = temp.getNext();
-        } while (temp != null);
+            System.out.print(start.getName() + " ");
+            start = start.getNext();
+        } while (start != null);
         System.out.println();
     }
 
@@ -104,6 +101,16 @@ public interface Step {
             start = temp;
         }
         temp = start;
+        return temp;
+    }
+
+    static Node findLast(Node somenode) {
+        Node last = somenode;
+        Node temp;
+        while ((temp = last.getNext()) != null) {
+            last = temp;
+        }
+        temp = last;
         return temp;
     }
 

@@ -5,21 +5,21 @@ import java.util.List;
 
 public class StepQueue {
 
-    private final List<Step> stepQueue = new ArrayList<>();
+    private final List<Step> stepQueueList = new ArrayList<>();
     private final int position = 0;
 
     public void enqueue(Step step) {
-        stepQueue.add(position, step);
+        stepQueueList.add(step);
     }
 
     public Step dequeue() {
-        if (stepQueue.isEmpty()) {
+        if (stepQueueList.isEmpty()) {
             return null;
         }
-        return stepQueue.remove(position);
+        return stepQueueList.remove(position);
     }
 
     public boolean isEmpty() {
-        return stepQueue.isEmpty();
+        return stepQueueList.isEmpty();
     }
 }

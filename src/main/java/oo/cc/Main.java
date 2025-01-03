@@ -5,6 +5,7 @@ import oo.cc.nodes.Space;
 import oo.cc.steps.Direct;
 import oo.cc.strategies.exhaustive.ExhaustiveStrategy;
 import oo.cc.strategies.Strategy;
+import oo.cc.strategies.thebest.TheBestStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,8 @@ public class Main {
         System.out.println("Hello, World!");
 
         List<Node> nodeList = initial();
-        Strategy strategy = new ExhaustiveStrategy(nodeList);
+//        Strategy strategy = new ExhaustiveStrategy(nodeList);
+        Strategy strategy = new TheBestStrategy(nodeList);
         strategy.exec();
     }
 
@@ -23,7 +25,7 @@ public class Main {
         Node nodeB = new Node("B", Direct.RIGHT);
         Node nodeC = new Node("C", Direct.RIGHT);
         Node nodeD = new Node("D", Direct.RIGHT);
-        Node node0 = new Space("0");
+        Node node0 = new Space("0", Direct.NONE);
         Node nodea = new Node("a");
         Node nodeb = new Node("b");
         Node nodec = new Node("c");
@@ -40,14 +42,14 @@ public class Main {
 //        nodeList.add(nodec);
 //        nodeList.add(noded);
 
-        nodeList.add(nodeA);
-        nodeList.add(nodea);
-        nodeList.add(nodeB);
-        nodeList.add(nodeb);
-        nodeList.add(nodeC);
-        nodeList.add(nodec);
-        nodeList.add(nodeD);
         nodeList.add(noded);
+        nodeList.add(nodec);
+        nodeList.add(nodeb);
+        nodeList.add(nodea);
+        nodeList.add(nodeA);
+        nodeList.add(nodeB);
+        nodeList.add(nodeC);
+        nodeList.add(nodeD);
         nodeList.add(node0);
 
         /*

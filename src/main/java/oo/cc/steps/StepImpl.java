@@ -1,8 +1,7 @@
-package oo.cc.strategies.exhaustive;
+package oo.cc.steps;
 
 import oo.cc.nodes.Node;
 import oo.cc.nodes.Space;
-import oo.cc.steps.Step;
 
 public class StepImpl implements Step {
 
@@ -18,9 +17,14 @@ public class StepImpl implements Step {
         return way >= 4;
     }
 
+    @Override
+    public void reset() {
+        way = 0;
+    }
+
     /*
-        d c b a x A B C D
-     */
+            d c b a x A B C D
+         */
     @Override
     public boolean move() {
         if (!node.canMove() || way >= 4) {

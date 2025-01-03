@@ -1,5 +1,5 @@
 package oo.cc.steps;
 
 public enum Direct {
-    LEFT, RIGHT
+    LEFT, RIGHT, NONE
 }

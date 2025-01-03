@@ -7,14 +7,27 @@ public class Node {
     private Node next;
     private Node prev;
     private Direct direct;
+    private int priority;
 
     public Node(String name) {
         this(name, Direct.LEFT);
     }
 
     public Node(String name, Direct direct) {
+        this(name, direct, 0);
+    }
+
+    public Node(String name, Direct direct, int priority) {
         this.name = name;
         this.direct = direct;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public String getName() {

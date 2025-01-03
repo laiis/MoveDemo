@@ -3,6 +3,7 @@ package oo.cc.strategies.exhaustive;
 import oo.cc.nodes.Node;
 import oo.cc.nodes.Space;
 import oo.cc.steps.Step;
+import oo.cc.steps.StepImpl;
 import oo.cc.strategies.Strategy;
 
 import java.util.ArrayList;
