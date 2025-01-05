@@ -13,9 +13,11 @@ import java.util.List;
 
 public class TheBestStrategy implements Strategy {
     private final List<Node> nodeList;
+    private final int NODE_SIZE;
 
     public TheBestStrategy(List<Node> nodeList) {
         this.nodeList = new ArrayList<>(nodeList);
+        NODE_SIZE = this.nodeList.size();
     }
 
     @Override
@@ -82,15 +84,11 @@ public class TheBestStrategy implements Strategy {
             Node left = node0.getPrev();
             do {
 
-                if (left != null && left.getPrev() == null) {
-                    tempList.add(0, left);
-                } else if (left != null) {
+                if (left != null) {
                     tempList.add(left);
                 }
 
-                if (right != null && right.getNext() == null) {
-                    tempList.add(0, right);
-                } else if (right != null) {
+                if (right != null) {
                     tempList.add(right);
                 }
 
@@ -103,26 +101,6 @@ public class TheBestStrategy implements Strategy {
                 }
 
             } while (left != null || right != null);
-
-//            if (node0.getPrev() != null && node0.getPrev().getPrev() == null) {
-//                tempList.add(0, node0.getPrev());
-//            } else if (node0.getPrev() != null) {
-//                tempList.add(node0.getPrev());
-//            }
-//
-//            if (node0.getNext() != null && node0.getNext().getNext() == null) {
-//                tempList.add(0, node0.getNext());
-//            } else if (node0.getNext() != null) {
-//                tempList.add(node0.getNext());
-//            }
-//
-//            if (node0.getPrev() != null && node0.getPrev().getPrev() != null) {
-//                tempList.add(node0.getPrev().getPrev());
-//            }
-//
-//            if (node0.getNext() != null && node0.getNext().getNext() != null) {
-//                tempList.add(node0.getNext().getNext());
-//            }
 
             return tempList;
         }
@@ -137,14 +115,18 @@ public class TheBestStrategy implements Strategy {
 
         for (Node node : nodeList) {
             if (node.getDirect() == Direct.LEFT) {
-                if (node.getNext() instanceof Space) {
-                    node.setPriority(3);
-                } else if (node.getNext() != null && node.getNext().getDirect() != node.getDirect() && node.getNext().getNext() instanceof Space) {
+                if (node.getNext() != null && node.getNext().getDirect() != node.getDirect() && node.getNext().getNext() instanceof Space) {
                     node.setPriority(4);
                 } else if (node.getNext() != null && node.getNext().getDirect() == node.getDirect() && node.getNext().getNext() instanceof Space) {
+                    node.setPriority(3);
+                } else if (node.getNext() instanceof Space && node.getNext().getNext() != null && node.getNext().getNext().getDirect() == node.getDirect()) {
                     node.setPriority(2);
-                } else if (node.getNext() instanceof Space && node.getNext().getNext().getDirect() == node.getDirect()) {
+                } else if (node.getNext() instanceof Space) {
                     node.setPriority(1);
+                    int idx = Step.findIndex(node);
+                    if (idx == 0) {
+                        node.setPriority(5);
+                    }
                 } else if (node.getPrev() instanceof Space) {
                     node.setPriority(0);
                     continue;
@@ -153,14 +135,18 @@ public class TheBestStrategy implements Strategy {
                     continue;
                 }
             } else {
-                if (node.getPrev() instanceof Space) {
-                    node.setPriority(3);
-                } else if (node.getPrev() != null && node.getPrev().getDirect() != node.getDirect() && node.getPrev().getPrev() instanceof Space) {
+                if (node.getPrev() != null && node.getPrev().getDirect() != node.getDirect() && node.getPrev().getPrev() instanceof Space) {
                     node.setPriority(4);
                 } else if (node.getPrev() != null && node.getPrev().getDirect() == node.getDirect() && node.getPrev().getPrev() instanceof Space) {
+                    node.setPriority(3);
+                } else if (node.getPrev() instanceof Space && node.getPrev().getPrev() != null && node.getPrev().getPrev().getDirect() == node.getDirect()) {
                     node.setPriority(2);
-                } else if (node.getPrev() instanceof Space && node.getPrev().getPrev().getDirect() == node.getDirect()) {
+                } else if (node.getPrev() instanceof Space) {
                     node.setPriority(1);
+                    int idx = Step.findIndex(node);
+                    if (idx == 0) {
+                        node.setPriority(5);
+                    }
                 } else if (node.getNext() instanceof Space) {
                     node.setPriority(0);
                     continue;
@@ -168,41 +154,11 @@ public class TheBestStrategy implements Strategy {
                     node.setPriority(0);
                     continue;
                 }
-            }
 
-//                if (space.getNext() != null && space.getNext().getNext() != null && space.getNext().getNext().getNext() != null) {
-//                    if (node.getDirect() == Direct.LEFT) {
-//                        node.setPriority(1);
-//                    } else {
-//                        node.setPriority(4);
-//                    }
-//                } else if (space.getPrev() != null && space.getPrev().getPrev() != null && space.getPrev().getPrev().getPrev() != null) {
-//                    if (node.getDirect() == Direct.LEFT) {
-//                        node.setPriority(4);
-//                    } else {
-//                        node.setPriority(1);
-//                    }
-//                }
-//            }
+            }
 
             sortedQueue(node, nodeQueue);
         }
-    }
-
-    private boolean isAtRightSide(Node space) {
-        return space.getNext() != null && space.getNext().getNext() != null && space.getNext().getNext().getNext() != null && space.getNext().getNext().getNext().getNext() == null;
-    }
-
-    private boolean hasEnoughSpace(Node space) {
-        if (space instanceof Space) {
-            if (isAtRightSide(space)) {
-                return space.getNext() != null && space.getNext().getNext() != null && space.getNext().getNext().getNext() != null && space.getNext().getNext().getNext().getNext() != null;
-            } else {
-                return space.getPrev() != null && space.getPrev().getPrev() != null && space.getPrev().getPrev().getPrev() != null && space.getPrev().getPrev().getPrev().getPrev() != null;
-            }
-        }
-
-        return true;
     }
 
     private void sortedQueue(Node node, NodeQueue<Node> nodeQueue) {

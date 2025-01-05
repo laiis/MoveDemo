@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
 
-        List<Node> nodeList = initial(4);
+        List<Node> nodeList = initial(10);
         orderNode(nodeList);
 //        Strategy strategy = new ExhaustiveStrategy(nodeList);
         Strategy strategy = new TheBestStrategy(nodeList);
