@@ -7,6 +7,7 @@ public class StepImpl implements Step {
 
     private final Node node;
     private int way;
+    private final int moveFourDirection = 4;
 
     public StepImpl(Node node) {
         this.node = node;
@@ -14,7 +15,7 @@ public class StepImpl implements Step {
 
     @Override
     public boolean isNoWay() {
-        return way >= 4;
+        return way >= moveFourDirection;
     }
 
     @Override
@@ -27,7 +28,7 @@ public class StepImpl implements Step {
          */
     @Override
     public boolean move() {
-        if (!node.canMove() || way >= 4) {
+        if (!node.canMove() || isNoWay()) {
             return false;
         }
 
@@ -35,7 +36,7 @@ public class StepImpl implements Step {
         /*
             ExhaustiveStrategy move
          */
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < moveFourDirection; i++) {
             if (i == 0) {
                 isMove = moveToNext();
             } else if (i == 1) {
