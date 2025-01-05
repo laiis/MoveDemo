@@ -19,11 +19,11 @@ public class TheBestStrategy implements Strategy {
     }
 
     @Override
-    public void exec() {
-        Node node0 = findNode0();
+    public int exec() {
+        Node space = findNode0();
 
         System.out.println("before start move, we show the list:");
-        Step.showList(node0);
+        Step.showList(space);
 
         System.out.println("---------------- start -------------------");
 
@@ -33,7 +33,6 @@ public class TheBestStrategy implements Strategy {
         NodeQueue<Node> nodeQueue = new NodeQueue<>();
 
         // initial
-        Node space = findNode0();
         if (space.getPrev() != null && space.getNext() != null) {
             space.getPrev().setPriority(2);
             space.getPrev().getPrev().setPriority(1);
@@ -58,8 +57,8 @@ public class TheBestStrategy implements Strategy {
                     boolean isSuccess = step.move();
                     if (isSuccess) {
                         amount++;
-                        isAllMove = Step.isAllMove(currentNode, Step.findIndex(node0));
-                        Step.showList(node0);
+                        isAllMove = Step.isAllMove(currentNode, Step.findIndex(space));
+                        Step.showList(space);
 
                         if (isAllMove) {
                             break;
@@ -68,34 +67,62 @@ public class TheBestStrategy implements Strategy {
                 }
             }
 
-            prepare(nodeQueue, siblingNode0(node0));
+            prepare(nodeQueue, siblingNode0(space));
         } while (!isAllMove);
 
         System.out.println("total: " + amount + " steps");
+        return Long.valueOf(amount).intValue();
     }
 
     private List<Node> siblingNode0(Node node0) {
         if (node0 instanceof Space) {
             List<Node> tempList = new ArrayList<>();
-            if (node0.getPrev() != null && node0.getPrev().getPrev() == null) {
-                tempList.add(0, node0.getPrev());
-            } else if (node0.getPrev() != null) {
-                tempList.add(node0.getPrev());
-            }
 
-            if (node0.getNext() != null && node0.getNext().getNext() == null) {
-                tempList.add(0, node0.getNext());
-            } else if (node0.getNext() != null) {
-                tempList.add(node0.getNext());
-            }
+            Node right = node0.getNext();
+            Node left = node0.getPrev();
+            do {
 
-            if (node0.getPrev() != null && node0.getPrev().getPrev() != null) {
-                tempList.add(node0.getPrev().getPrev());
-            }
+                if (left != null && left.getPrev() == null) {
+                    tempList.add(0, left);
+                } else if (left != null) {
+                    tempList.add(left);
+                }
 
-            if (node0.getNext() != null && node0.getNext().getNext() != null) {
-                tempList.add(node0.getNext().getNext());
-            }
+                if (right != null && right.getNext() == null) {
+                    tempList.add(0, right);
+                } else if (right != null) {
+                    tempList.add(right);
+                }
+
+                if (left != null) {
+                    left = left.getPrev();
+                }
+
+                if (right != null) {
+                    right = right.getNext();
+                }
+
+            } while (left != null || right != null);
+
+//            if (node0.getPrev() != null && node0.getPrev().getPrev() == null) {
+//                tempList.add(0, node0.getPrev());
+//            } else if (node0.getPrev() != null) {
+//                tempList.add(node0.getPrev());
+//            }
+//
+//            if (node0.getNext() != null && node0.getNext().getNext() == null) {
+//                tempList.add(0, node0.getNext());
+//            } else if (node0.getNext() != null) {
+//                tempList.add(node0.getNext());
+//            }
+//
+//            if (node0.getPrev() != null && node0.getPrev().getPrev() != null) {
+//                tempList.add(node0.getPrev().getPrev());
+//            }
+//
+//            if (node0.getNext() != null && node0.getNext().getNext() != null) {
+//                tempList.add(node0.getNext().getNext());
+//            }
 
             return tempList;
         }
@@ -143,8 +170,39 @@ public class TheBestStrategy implements Strategy {
                 }
             }
 
+//                if (space.getNext() != null && space.getNext().getNext() != null && space.getNext().getNext().getNext() != null) {
+//                    if (node.getDirect() == Direct.LEFT) {
+//                        node.setPriority(1);
+//                    } else {
+//                        node.setPriority(4);
+//                    }
+//                } else if (space.getPrev() != null && space.getPrev().getPrev() != null && space.getPrev().getPrev().getPrev() != null) {
+//                    if (node.getDirect() == Direct.LEFT) {
+//                        node.setPriority(4);
+//                    } else {
+//                        node.setPriority(1);
+//                    }
+//                }
+//            }
+
             sortedQueue(node, nodeQueue);
         }
+    }
+
+    private boolean isAtRightSide(Node space) {
+        return space.getNext() != null && space.getNext().getNext() != null && space.getNext().getNext().getNext() != null && space.getNext().getNext().getNext().getNext() == null;
+    }
+
+    private boolean hasEnoughSpace(Node space) {
+        if (space instanceof Space) {
+            if (isAtRightSide(space)) {
+                return space.getNext() != null && space.getNext().getNext() != null && space.getNext().getNext().getNext() != null && space.getNext().getNext().getNext().getNext() != null;
+            } else {
+                return space.getPrev() != null && space.getPrev().getPrev() != null && space.getPrev().getPrev().getPrev() != null && space.getPrev().getPrev().getPrev().getPrev() != null;
+            }
+        }
+
+        return true;
     }
 
     private void sortedQueue(Node node, NodeQueue<Node> nodeQueue) {
@@ -154,10 +212,10 @@ public class TheBestStrategy implements Strategy {
         } else {
             do {
                 Node temp = nodeQueue.peek();
-                if (temp != null && temp.getPriority() != 0) {
-                    if (temp.getPriority() < node.getPriority()) {
+                if (temp != null && temp.getPriority() >= 0) {
+                    if (temp.getPriority() <= node.getPriority()) {
                         temp = nodeQueue.dequeue();
-                        stackList.add(0, temp);
+                        stackList.add(temp);
                     } else {
                         for (Node n : stackList) {
                             nodeQueue.enqueue(n);
