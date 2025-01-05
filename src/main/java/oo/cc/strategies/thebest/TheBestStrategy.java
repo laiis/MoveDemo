@@ -19,7 +19,7 @@ public class TheBestStrategy implements Strategy {
     }
 
     @Override
-    public void exec() {
+    public int exec() {
         Node node0 = findNode0();
 
         System.out.println("before start move, we show the list:");
@@ -72,6 +72,7 @@ public class TheBestStrategy implements Strategy {
         } while (!isAllMove);
 
         System.out.println("total: " + amount + " steps");
+        return Long.valueOf(amount).intValue();
     }
 
     private List<Node> siblingNode0(Node node0) {
