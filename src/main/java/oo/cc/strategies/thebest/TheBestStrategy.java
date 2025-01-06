@@ -124,8 +124,10 @@ public class TheBestStrategy implements Strategy {
                 } else if (node.getNext() instanceof Space) {
                     node.setPriority(1);
                     int idx = Step.findIndex(node);
-                    if (idx == 0) {
-                        node.setPriority(5);
+                    for (int i = 0; i < NODE_SIZE / 2 - 2; i++) {
+                        if (idx == i) {
+                            node.setPriority(5 + i);
+                        }
                     }
                 } else if (node.getPrev() instanceof Space) {
                     node.setPriority(0);
@@ -138,15 +140,11 @@ public class TheBestStrategy implements Strategy {
                 if (node.getPrev() != null && node.getPrev().getDirect() != node.getDirect() && node.getPrev().getPrev() instanceof Space) {
                     node.setPriority(4);
                 } else if (node.getPrev() != null && node.getPrev().getDirect() == node.getDirect() && node.getPrev().getPrev() instanceof Space) {
-                    node.setPriority(3);
-                } else if (node.getPrev() instanceof Space && node.getPrev().getPrev() != null && node.getPrev().getPrev().getDirect() == node.getDirect()) {
-                    node.setPriority(2);
-                } else if (node.getPrev() instanceof Space) {
                     node.setPriority(1);
-                    int idx = Step.findIndex(node);
-                    if (idx == 0) {
-                        node.setPriority(5);
-                    }
+                } else if (node.getPrev() instanceof Space && node.getPrev().getPrev() != null && node.getPrev().getPrev().getDirect() == node.getDirect()) {
+                    node.setPriority(3);
+                } else if (node.getPrev() instanceof Space) {
+                    node.setPriority(2);
                 } else if (node.getNext() instanceof Space) {
                     node.setPriority(0);
                     continue;
