@@ -37,9 +37,13 @@ public class TheBestStrategy implements Strategy {
         // initial
         if (space.getPrev() != null && space.getNext() != null) {
             space.getPrev().setPriority(2);
-            space.getPrev().getPrev().setPriority(1);
+            if (space.getPrev().getPrev() != null) {
+                space.getPrev().getPrev().setPriority(1);
+            }
             space.getNext().setPriority(2);
-            space.getNext().getNext().setPriority(1);
+            if (space.getNext().getNext() != null) {
+                space.getNext().getNext().setPriority(1);
+            }
             nodeQueue.enqueue(space.getPrev());
             nodeQueue.enqueue(space.getNext());
             nodeQueue.enqueue(space.getPrev().getPrev());

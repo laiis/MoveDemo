@@ -13,12 +13,13 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
-        for (int i = 2; i <= 20; i++) {
+        for (int i = 2; i <= 26; i++) {
             List<Node> nodeList = initial(i);
             orderNode(nodeList);
-//        Strategy strategy = new ExhaustiveStrategy(nodeList);
+//            Strategy strategy = new ExhaustiveStrategy(nodeList);
             Strategy strategy = new TheBestStrategy(nodeList);
             strategy.exec();
+            System.out.println();
         }
 
     }

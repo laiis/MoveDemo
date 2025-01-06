@@ -17,7 +17,9 @@ public class NodeQueue<T> {
     }
 
     public void enqueue(T node) {
-        nodeQueueList.add(node);
+        if (node != null) {
+            nodeQueueList.add(node);
+        }
     }
 
     public T dequeue() {

@@ -77,13 +77,13 @@ public class StrategyTest {
 
     @Test
     public void testTheBestStrategy() {
-        int N = 7;
-        List<Node> nodeList = genNode(N);
-//        Strategy strategy = new ExhaustiveStrategy(nodeList);
-        orderNode(nodeList);
-        Strategy strategy = new TheBestStrategy(nodeList);
-        int amount = strategy.exec();
-        int expected = N * (N + 2);
-        Assertions.assertEquals(expected, amount);
+        for (int i = 1; i <= 26; i++) {
+            List<Node> nodeList = genNode(i);
+            orderNode(nodeList);
+            Strategy strategy = new TheBestStrategy(nodeList);
+            int amount = strategy.exec();
+            int expected = i * (i + 2);
+            Assertions.assertEquals(expected, amount);
+        }
     }
 }
