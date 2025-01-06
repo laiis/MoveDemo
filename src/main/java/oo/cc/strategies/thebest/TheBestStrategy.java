@@ -128,10 +128,8 @@ public class TheBestStrategy implements Strategy {
                 } else if (node.getNext() instanceof Space) {
                     node.setPriority(1);
                     int idx = Step.findIndex(node);
-                    for (int i = 0; i < NODE_SIZE / 2 - 2; i++) {
-                        if (idx == i) {
-                            node.setPriority(5 + i);
-                        }
+                    if (idx < (NODE_SIZE / 2 - 2)) {
+                        node.setPriority(5 + idx);
                     }
                 } else if (node.getPrev() instanceof Space) {
                     node.setPriority(0);
