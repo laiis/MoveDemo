@@ -27,6 +27,10 @@ public class NodeQueue<T> {
         return nodeQueueList.remove(position);
     }
 
+    public void clear() {
+        nodeQueueList.clear();
+    }
+
     public boolean isEmpty() {
         return nodeQueueList.isEmpty();
     }
