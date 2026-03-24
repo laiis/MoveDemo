@@ -24,10 +24,7 @@ public class TheBestStrategy implements Strategy {
     public int exec() {
         Node space = findNode0();
 
-        System.out.println("before start move, we show the list:");
-        Step.showList(space);
-
-        System.out.println("---------------- start -------------------");
+         Step.showList(space); // 移除 I/O
 
         Step step;
         boolean isAllMove = false;
@@ -64,7 +61,7 @@ public class TheBestStrategy implements Strategy {
                     if (isSuccess) {
                         amount++;
                         isAllMove = Step.isAllMove(currentNode, Step.findIndex(space));
-                        Step.showList(space);
+                        // Step.showList(space); // 移除 I/O
 
                         if (isAllMove) {
                             break;
@@ -76,35 +73,28 @@ public class TheBestStrategy implements Strategy {
             prepare(nodeQueue, siblingNode0(space));
         } while (!isAllMove);
 
-        System.out.println("total: " + amount + " steps");
+        // System.out.println("total: " + amount + " steps");
         return Long.valueOf(amount).intValue();
     }
 
     private List<Node> siblingNode0(Node node0) {
         if (node0 instanceof Space) {
-            List<Node> tempList = new ArrayList<>();
+            List<Node> tempList = new ArrayList<>(NODE_SIZE); // 預先分配大小
 
             Node right = node0.getNext();
             Node left = node0.getPrev();
-            do {
+            while (left != null || right != null) {
 
                 if (left != null) {
                     tempList.add(left);
-                }
-
-                if (right != null) {
-                    tempList.add(right);
-                }
-
-                if (left != null) {
                     left = left.getPrev();
                 }
 
                 if (right != null) {
+                    tempList.add(right);
                     right = right.getNext();
                 }
-
-            } while (left != null || right != null);
+            }
 
             return tempList;
         }

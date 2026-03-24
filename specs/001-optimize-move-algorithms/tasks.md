@@ -69,13 +69,14 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 ### Tests for User Story 2
 
-- [ ] T012 [P] [US2] 撰寫針對大規模 N 的效能回歸測試於 src/test/java/oo/cc/PerformanceTest.java
+- [X] T012 [P] [US2] 撰寫針對大規模 N 的效能回歸測試於 src/test/java/oo/cc/PerformanceTest.java
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] 移除 TheBestStrategy.java 中不必要的 I/O 呼叫（如 Step.showList）
-- [ ] T014 [US2] 優化節點遍歷邏輯以減少對象建立次數於 src/main/java/oo/cc/strategies/thebest/TheBestStrategy.java
-- [ ] T015 [US2] 執行優化後的測試並記錄 N=26 的數據，確認符合 SC-001
+- [X] T013 [US2] 移除 TheBestStrategy.java 中不必要的 I/O 呼叫（如 Step.showList）
+- [X] T014 [US2] 優化節點遍歷邏輯以減少對象建立次數於 src/main/java/oo/cc/strategies/thebest/TheBestStrategy.java
+- [X] T015 [US2] 執行優化後的測試並記錄 N=26 的數據，確認符合 SC-001
+- [ ] T012-1 [US2] 執行測試 src/test/java/oo/cc/PerformanceTest.java， 確認通過測試
 
 **Checkpoint**: 使用者故事 2 已完成，現有策略已獲得顯著優化
 
