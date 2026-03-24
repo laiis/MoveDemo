@@ -22,8 +22,8 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 **Purpose**: 專案初始化與基礎結構設定
 
-- [ ] T001 建立專案目錄結構並確認 Gradle 設定於 build.gradle
-- [ ] T002 [P] 設定 JUnit 5 測試環境與必要的依賴項目於 build.gradle
+- [X] T001 建立專案目錄結構並確認 Gradle 設定於 build.gradle
+- [X] T002 [P] 設定 JUnit 5 測試環境與必要的依賴項目於 build.gradle
 
 ---
 
@@ -31,10 +31,10 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 **Purpose**: 核心基礎設施，必須在開始使用者故事前完成
 
-- [ ] T003 定義核心介面 Strategy 於 src/main/java/oo/cc/strategies/Strategy.java
-- [ ] T004 建立 BenchmarkResult 資料模型於 src/main/java/oo/cc/strategies/benchmark/BenchmarkResult.java
-- [ ] T005 [P] 實作 BenchmarkDecorator 於 src/main/java/oo/cc/strategies/benchmark/BenchmarkDecorator.java
-- [ ] T006 [P] 建立基礎搜尋狀態模型 State 於 src/main/java/oo/cc/strategies/search/State.java
+- [X] T003 定義核心介面 Strategy 於 src/main/java/oo/cc/strategies/Strategy.java
+- [X] T004 建立 BenchmarkResult 資料模型於 src/main/java/oo/cc/strategies/benchmark/BenchmarkResult.java
+- [X] T005 [P] 實作 BenchmarkDecorator 於 src/main/java/oo/cc/strategies/benchmark/BenchmarkDecorator.java
+- [X] T006 [P] 建立基礎搜尋狀態模型 State 於 src/main/java/oo/cc/strategies/search/State.java
 
 **Checkpoint**: 基礎設施已就緒 - 使用者故事實作可以開始並行進行
 
@@ -48,14 +48,14 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] 撰寫現有策略的基準測試案例於 src/test/java/oo/cc/StrategyTest.java
+- [X] T007 [P] [US1] 撰寫現有策略的基準測試案例於 src/test/java/oo/cc/StrategyTest.java
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] 在 Main.java 中整合 BenchmarkDecorator 以支援效能報告輸出
-- [ ] T009 [US1] 執行基準測試並記錄 N=1 到 N=26 的現有數據於 research.md
-- [ ] T010 [US1] 實作簡單的計時器與記憶體監控工具於 src/main/java/oo/cc/strategies/benchmark/Profiler.java
-- [ ] T011 [US1] 驗證基準測試報告格式符合 FR-001 要求
+- [X] T008 [US1] 在 Main.java 中整合 BenchmarkDecorator 以支援效能報告輸出
+- [X] T009 [US1] 執行基準測試並記錄 N=1 到 N=26 的現有數據於 research.md
+- [X] T010 [US1] 實作簡單的計時器與記憶體監控工具於 src/main/java/oo/cc/strategies/benchmark/Profiler.java
+- [X] T011 [US1] 驗證基準測試報告格式符合 FR-001 要求
 
 **Checkpoint**: 使用者故事 1 已完成，可獨立進行基準測試
 

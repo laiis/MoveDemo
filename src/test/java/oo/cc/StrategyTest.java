@@ -4,48 +4,22 @@ import oo.cc.nodes.Node;
 import oo.cc.nodes.Space;
 import oo.cc.steps.Direct;
 import oo.cc.strategies.Strategy;
+import oo.cc.strategies.benchmark.BenchmarkDecorator;
+import oo.cc.strategies.benchmark.BenchmarkResult;
 import oo.cc.strategies.thebest.TheBestStrategy;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StrategyTest {
 
-    private static List<Node> initial() {
-        Node nodeA = new Node("A", Direct.RIGHT);
-        Node nodeB = new Node("B", Direct.RIGHT);
-        Node nodeC = new Node("C", Direct.RIGHT);
-        Node nodeD = new Node("D", Direct.RIGHT);
-        Node node0 = new Space("0", Direct.NONE);
-        Node nodea = new Node("a");
-        Node nodeb = new Node("b");
-        Node nodec = new Node("c");
-        Node noded = new Node("d");
-
-        List<Node> nodeList = new ArrayList<>();
-        nodeList.add(noded);
-        nodeList.add(nodec);
-        nodeList.add(nodeb);
-        nodeList.add(nodea);
-        nodeList.add(nodeA);
-        nodeList.add(nodeB);
-        nodeList.add(nodeC);
-        nodeList.add(nodeD);
-        nodeList.add(node0);
-
-        /*
-            d c b a x A B C D
-        */
-//        orderNode(noded, nodec, nodeb, nodea, node0, nodeA, nodeB, nodeC, nodeD);
-
-        return nodeList;
-    }
-
     private List<Node> genNode(int size) {
         List<Node> nodeList = new ArrayList<>();
-
+        // 左側節點 (a, b, c...)
         for (int i = 0; i < size; i++) {
             Node node = new Node(String.valueOf((char) ('a' + i)), Direct.LEFT);
             nodeList.add(node);
@@ -61,7 +35,7 @@ public class StrategyTest {
         return nodeList;
     }
 
-    private static void orderNode(List<Node> nodeList) {
+    private void orderNode(List<Node> nodeList) {
         Node temp = nodeList.get(0);
         for (int i = 1; i < nodeList.size(); i++) {
             temp.setNext(nodeList.get(i));
@@ -75,15 +49,36 @@ public class StrategyTest {
         }
     }
 
-    @Test
-    public void testTheBestStrategy() {
-        for (int i = 1; i <= 26; i++) {
-            List<Node> nodeList = genNode(i);
-            orderNode(nodeList);
-            Strategy strategy = new TheBestStrategy(nodeList);
-            int amount = strategy.exec();
-            int expected = i * (i + 2);
-            Assertions.assertEquals(expected, amount);
-        }
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5, 10, 20})
+    @DisplayName("驗證 TheBestStrategy 符合 N*(N+2) 公式")
+    public void testTheBestStrategy(int n) {
+        List<Node> nodeList = genNode(n);
+        orderNode(nodeList);
+        Strategy strategy = new TheBestStrategy(nodeList);
+        
+        int expectedSteps = n * (n + 2);
+        int actualSteps = strategy.exec();
+        
+        Assertions.assertEquals(expectedSteps, actualSteps, "N=" + n + " 時步數不符");
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    @DisplayName("驗證 BenchmarkDecorator 正確攔截指標")
+    public void testBenchmarkDecorator(int n) {
+        List<Node> nodeList = genNode(n);
+        orderNode(nodeList);
+        Strategy baseStrategy = new TheBestStrategy(nodeList);
+        BenchmarkDecorator decorator = new BenchmarkDecorator(baseStrategy, "TheBest", n);
+        
+        int expectedSteps = n * (n + 2);
+        int actualSteps = decorator.exec();
+        BenchmarkResult result = decorator.getResult();
+        
+        Assertions.assertEquals(expectedSteps, actualSteps);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("TheBest", result.strategyName());
+        Assertions.assertTrue(result.timeInNano() > 0);
     }
 }
