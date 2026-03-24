@@ -76,7 +76,7 @@ description: "優化移動演算法並探索替代實作的任務清單"
 - [X] T013 [US2] 移除 TheBestStrategy.java 中不必要的 I/O 呼叫（如 Step.showList）
 - [X] T014 [US2] 優化節點遍歷邏輯以減少對象建立次數於 src/main/java/oo/cc/strategies/thebest/TheBestStrategy.java
 - [X] T015 [US2] 執行優化後的測試並記錄 N=26 的數據，確認符合 SC-001
-- [ ] T012-1 [US2] 執行測試 src/test/java/oo/cc/PerformanceTest.java， 確認通過測試
+- [X] T012-1 [US2] 執行測試 src/test/java/oo/cc/PerformanceTest.java， 確認通過測試
 
 **Checkpoint**: 使用者故事 2 已完成，現有策略已獲得顯著優化
 
@@ -95,10 +95,10 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 ### Implementation for User Story 3
 
-- [ ] T018 [P] [US3] 實作 BFS 策略於 src/main/java/oo/cc/strategies/search/BFSStrategy.java
+- [X] T018 [P] [US3] 實作 BFS 策略於 src/main/java/oo/cc/strategies/search/BFSStrategy.java
 - [X] T019 [P] [US3] 實作 A* 策略於 src/main/java/oo/cc/strategies/search/AStarStrategy.java
 - [X] T020 [US3] 定義 A* 的啟發函數（Heuristic Function）於 src/main/java/oo/cc/strategies/search/Heuristics.java
-- [ ] T021 [US3] 在 Main.java 選單中增加新策略的選擇分支
+- [X] T021 [US3] 在 Main.java 選單中增加新策略的選擇分支
 
 **Checkpoint**: 所有使用者故事實作完成，具備多種演算法選擇
 
@@ -108,7 +108,7 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 **Purpose**: 整體效能驗證、文件更新與程式碼清理
 
-- [ ] T022 [P] 更新 README.md 與 quickstart.md 中的執行範例
+- [X] T022 [P] 更新 README.md 與 quickstart.md 中的執行範例
 - [ ] T023 執行完整測試套件，確保 100% 程式碼覆蓋率
 - [ ] T024 [P] 清理與重構重複代碼，確保符合 SOLID 原則
 - [ ] T025 產生最終的基準測試比較報告並更新至 research.md

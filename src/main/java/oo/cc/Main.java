@@ -6,25 +6,25 @@ import oo.cc.strategies.benchmark.BenchmarkDecorator;
 import oo.cc.strategies.benchmark.BenchmarkResult;
 import oo.cc.strategies.exhaustive.ExhaustiveStrategy;
 import oo.cc.strategies.Strategy;
+import oo.cc.strategies.search.AStarStrategy;
+import oo.cc.strategies.search.BFSStrategy;
 import oo.cc.strategies.thebest.TheBestStrategy;
 
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("MoveDemo Performance Benchmark (US1)");
-        System.out.println("------------------------------------");
+        System.out.println("MoveDemo Performance Benchmark (US1 & US3)");
+        System.out.println("-------------------------------------------");
         System.out.printf("%-5s | %-15s | %-10s | %-15s | %-10s%n", "N", "Strategy", "Steps", "Time (ns)", "Memory (B)");
         System.out.println("-------------------------------------------------------------------------");
 
         for (int i = 1; i <= 26; i++) {
             runBenchmark(i, "TheBest");
-        }
-
-        System.out.println("\nExhaustive Strategy Benchmark (N=1 to 10)");
-        System.out.println("-----------------------------------------");
-        for (int i = 1; i <= 10; i++) {
-            runBenchmark(i, "Exhaustive");
+            if (i <= 10) {
+                runBenchmark(i, "BFS");
+                runBenchmark(i, "AStar");
+            }
         }
     }
 
@@ -32,10 +32,19 @@ public class Main {
         List<Node> nodeList = NodeFactory.createNodeChain(n);
         Strategy baseStrategy;
         
-        if ("Exhaustive".equalsIgnoreCase(strategyType)) {
-            baseStrategy = new ExhaustiveStrategy(nodeList);
-        } else {
-            baseStrategy = new TheBestStrategy(nodeList);
+        switch (strategyType.toUpperCase()) {
+            case "EXHAUSTIVE":
+                baseStrategy = new ExhaustiveStrategy(nodeList);
+                break;
+            case "BFS":
+                baseStrategy = new BFSStrategy(nodeList);
+                break;
+            case "ASTAR":
+                baseStrategy = new AStarStrategy(nodeList);
+                break;
+            default:
+                baseStrategy = new TheBestStrategy(nodeList);
+                break;
         }
 
         BenchmarkDecorator decorator = new BenchmarkDecorator(baseStrategy, strategyType, n);
