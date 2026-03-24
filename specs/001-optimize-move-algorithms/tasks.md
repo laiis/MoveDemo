@@ -90,14 +90,14 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 ### Tests for User Story 3
 
-- [ ] T016 [P] [US3] 撰寫 A* 啟發函數的單元測試於 src/test/java/oo/cc/HeuristicTest.java
-- [ ] T017 [P] [US3] 在 StrategyTest.java 中新增對 BFSStrategy 與 AStarStrategy 的驗證
+- [X] T016 [P] [US3] 撰寫 A* 啟發函數的單元測試於 src/test/java/oo/cc/HeuristicTest.java
+- [X] T017 [P] [US3] 在 StrategyTest.java 中新增對 BFSStrategy 與 AStarStrategy 的驗證
 
 ### Implementation for User Story 3
 
 - [ ] T018 [P] [US3] 實作 BFS 策略於 src/main/java/oo/cc/strategies/search/BFSStrategy.java
-- [ ] T019 [P] [US3] 實作 A* 策略於 src/main/java/oo/cc/strategies/search/AStarStrategy.java
-- [ ] T020 [US3] 定義 A* 的啟發函數（Heuristic Function）於 src/main/java/oo/cc/strategies/search/Heuristics.java
+- [X] T019 [P] [US3] 實作 A* 策略於 src/main/java/oo/cc/strategies/search/AStarStrategy.java
+- [X] T020 [US3] 定義 A* 的啟發函數（Heuristic Function）於 src/main/java/oo/cc/strategies/search/Heuristics.java
 - [ ] T021 [US3] 在 Main.java 選單中增加新策略的選擇分支
 
 **Checkpoint**: 所有使用者故事實作完成，具備多種演算法選擇
