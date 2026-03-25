@@ -5,7 +5,7 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 # Tasks: 001-optimize-move-algorithms
 
-**Input**: Design documents from `/specs/001-optimize-move-algorithms/`
+**Input**: Design documents from `/specs/001-optimize-move-algorithms/`, `PieceRule.md`
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/
 
 **Tests**: 採用 TDD 開發模式，所有實作前必須先撰寫測試案例。
@@ -13,7 +13,7 @@ description: "優化移動演算法並探索替代實作的任務清單"
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: 可並行執行（不同檔案，無未完成依賴）
-- **[Story]**: 該任務屬於哪個使用者故事（例如：US1, US2, US3）
+- **[Story]**: 該任務屬於哪個使用者故事（例如：US1, US2, US3, US4）
 - 描述中包含精確的檔案路徑
 
 ---
@@ -65,7 +65,7 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 **Goal**: 精煉 `TheBestStrategy` 邏輯，達成 N=26 效能提升 15%。
 
-**Independent Test**: 比較優化版本與基準版本在 N=26 時的執行時間。
+**Independent Test**: 比較優化版本與基準版本? N=26 時的執行時間。
 
 ### Tests for User Story 2
 
@@ -82,7 +82,7 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 ---
 
-## Phase 5: User Story 3 - 實作替代求解策略 (Priority: P3)
+## Phase 5: User Story 3 - 實作替代搜尋策略 (Priority: P3)
 
 **Goal**: 實作 BFS 與 A* 搜尋策略，提供多樣化的求解選擇。
 
@@ -100,18 +100,41 @@ description: "優化移動演算法並探索替代實作的任務清單"
 - [X] T020 [US3] 定義 A* 的啟發函數（Heuristic Function）於 src/main/java/oo/cc/strategies/search/Heuristics.java
 - [X] T021 [US3] 在 Main.java 選單中增加新策略的選擇分支
 
-**Checkpoint**: 所有使用者故事實作完成，具備多種演算法選擇
+**Checkpoint**: 所有使用者故事實作完成，具備多種搜尋演算法選擇
 
 ---
 
-## Phase 6: Polish & Cross-Cutting Concerns
+## Phase 6: User Story 4 - 實作規則導向遞迴策略 (Priority: P4)
+
+**Goal**: 根據 PieceRule.md 實作第二個移動演算法（遞迴回溯），嚴格遵循左右輪替規則。
+
+**Independent Test**: 驗證演算法能正確解決遊戲，且移動路徑符合「左右交替」與「單回合一次」規則。
+
+### Tests for User Story 4
+
+- [X] T026 [P] [US4] 撰寫針對 PieceRule 輪替規則的驗證測試於 src/test/java/oo/cc/PieceRuleTest.java
+- [ ] T027 [P] [US4] 在 StrategyTest.java 中新增對 RecursionStrategy 的驗證
+
+### Implementation for User Story 4
+
+- [X] T028 [P] [US4] 建立 RecursionStrategy 於 src/main/java/oo/cc/strategies/search/RecursionStrategy.java
+- [ ] T029 [US4] 實作基於 PieceRule.md 的狀態移轉邏輯（含滑動與跳躍）
+- [ ] T030 [US4] 實作「左右輪替」與「每回合移動一次」的移動限制邏輯
+- [ ] T031 [US4] 實作「回退至上上一步」的遞迴回溯機制
+- [ ] T032 [US4] 在 Main.java 中整合 RecursionStrategy 至演算法選單
+
+**Checkpoint**: 使用者故事 4 已完成，成功實作第二種基於規則的移動演算法
+
+---
+
+## Phase 7: Polish & Cross-Cutting Concerns
 
 **Purpose**: 整體效能驗證、文件更新與程式碼清理
 
-- [X] T022 [P] 更新 README.md 與 quickstart.md 中的執行範例
-- [X] T023 執行完整測試套件，確保 100% 程式碼覆蓋率
-- [X] T024 [P] 清理與重構重複代碼，確保符合 SOLID 原則
-- [X] T025 產生最終的基準測試比較報告並更新至 research.md
+- [ ] T033 [P] 更新 README.md 與 quickstart.md 中的執行範例（包含新演算法）
+- [ ] T034 執行完整測試套件，確保 100% 程式碼覆蓋率
+- [ ] T035 [P] 清理與重構重複代碼，確保符合 SOLID 原則
+- [ ] T036 產生最終的基準測試比較報告並更新至 research.md
 
 ---
 
@@ -121,25 +144,33 @@ description: "優化移動演算法並探索替代實作的任務清單"
 
 - **Setup (Phase 1)**: 無依賴，立即開始。
 - **Foundational (Phase 2)**: 依賴 Phase 1，阻擋所有使用者故事。
-- **User Stories (Phase 3+)**: 依賴 Phase 2。可依優先順序 (P1 → P2 → P3) 進行。
+- **User Stories (Phase 3+)**: 依賴 Phase 2。
+  - US1, US2, US3, US4 可在基礎設施完成後並行進行。
 - **Polish (Final Phase)**: 依賴所有使用者故事完成。
+
+### User Story Dependencies
+
+- **US4 (RecursionStrategy)**: 不依賴其他搜尋策略，但需依賴 `PieceRule.md` 中的規則定義。
 
 ### Parallel Opportunities
 
-- T002, T005, T006 可並行執行。
-- 測試任務 (T007, T012, T016, T017) 可與對應實作並行（或遵循 TDD 先行）。
-- BFS (T018) 與 A* (T019) 實作可並行執行。
+- T026, T027, T028 可並行執行。
+- 不同的策略實作（US3 與 US4）可由不同開發者同時進行。
 
 ---
 
 ## Implementation Strategy
 
-### MVP First (User Story 1 Only)
+### MVP First (User Story 4 Only)
 
 1. 完成 Phase 1 & 2。
-2. 完成 Phase 3 (基準測試框架)。
-3. **驗證**: 確保能輸出 N=26 的現有數據。
+2. 撰寫 `RecursionStrategy` 的基礎測試。
+3. 實作最小可行性的遞迴邏輯（僅限 N=1 或 N=2）。
+4. **驗證**: 確保移動順序符合 PieceRule.md。
 
 ### Incremental Delivery
 
-1. Foundation ready → MVP (US1) → 優化版本 (US2) → 多樣化演算法 (US3) → Final Polish。
+1. 實作基礎遞迴路徑。
+2. 加入左右輪替約束。
+3. 加入回溯優化邏輯（回退至上上一步）。
+4. 最終整合至基準測試框架進行效能比較。
