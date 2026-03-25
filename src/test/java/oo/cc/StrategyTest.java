@@ -5,6 +5,9 @@ import oo.cc.nodes.NodeFactory;
 import oo.cc.strategies.Strategy;
 import oo.cc.strategies.benchmark.BenchmarkDecorator;
 import oo.cc.strategies.benchmark.BenchmarkResult;
+import oo.cc.strategies.search.AStarStrategy;
+import oo.cc.strategies.search.BFSStrategy;
+import oo.cc.strategies.search.RecursionStrategy;
 import oo.cc.strategies.thebest.TheBestStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -27,23 +30,32 @@ public class StrategyTest {
         Assertions.assertEquals(expectedSteps, actualSteps, "N=" + n + " 時步數不符");
     }
 
-    // @ParameterizedTest
-    // @ValueSource(ints = {1, 2, 3, 4, 5})
-    // @DisplayName("驗證 BFSStrategy 符合 N*(N+2) 公式")
-    // public void testBFSStrategy(int n) {
-    //     Strategy strategy = new BFSStrategy(NodeFactory.createNodeChain(n));
-    //     int actualSteps = strategy.exec();
-    //     Assertions.assertEquals(n * (n + 2), actualSteps);
-    // }
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    @DisplayName("驗證 BFSStrategy 符合 N*(N+2) 公式")
+    public void testBFSStrategy(int n) {
+        Strategy strategy = new BFSStrategy(NodeFactory.createNodeChain(n));
+        int actualSteps = strategy.exec();
+        Assertions.assertEquals(n * (n + 2), actualSteps);
+    }
 
-    // @ParameterizedTest
-    // @ValueSource(ints = {1, 2, 3, 4, 5})
-    // @DisplayName("驗證 AStarStrategy 符合 N*(N+2) 公式")
-    // public void testAStarStrategy(int n) {
-    //     Strategy strategy = new AStarStrategy(NodeFactory.createNodeChain(n));
-    //     int actualSteps = strategy.exec();
-    //     Assertions.assertEquals(n * (n + 2), actualSteps);
-    // }
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    @DisplayName("驗證 AStarStrategy 符合 N*(N+2) 公式")
+    public void testAStarStrategy(int n) {
+        Strategy strategy = new AStarStrategy(NodeFactory.createNodeChain(n));
+        int actualSteps = strategy.exec();
+        Assertions.assertEquals(n * (n + 2), actualSteps);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5, 10, 20})
+    @DisplayName("驗證 RecursionStrategy 符合 N*(N+2) 公式")
+    public void testRecursionStrategy(int n) {
+        Strategy strategy = new RecursionStrategy(NodeFactory.createNodeChain(n));
+        int actualSteps = strategy.exec();
+        Assertions.assertEquals(n * (n + 2), actualSteps, "RecursionStrategy 在 N=" + n + " 時步數不符");
+    }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})

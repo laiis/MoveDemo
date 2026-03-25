@@ -8,6 +8,7 @@ import oo.cc.strategies.exhaustive.ExhaustiveStrategy;
 import oo.cc.strategies.Strategy;
 import oo.cc.strategies.search.AStarStrategy;
 import oo.cc.strategies.search.BFSStrategy;
+import oo.cc.strategies.search.RecursionStrategy;
 import oo.cc.strategies.thebest.TheBestStrategy;
 
 import java.util.List;
@@ -25,6 +26,9 @@ public class Main {
                 runBenchmark(i, "BFS");
                 runBenchmark(i, "AStar");
             }
+            if (i <= 5) { // Recursion is slower
+                runBenchmark(i, "Recursion");
+            }
         }
     }
 
@@ -41,6 +45,9 @@ public class Main {
                 break;
             case "ASTAR":
                 baseStrategy = new AStarStrategy(nodeList);
+                break;
+            case "RECURSION":
+                baseStrategy = new RecursionStrategy(nodeList);
                 break;
             default:
                 baseStrategy = new TheBestStrategy(nodeList);

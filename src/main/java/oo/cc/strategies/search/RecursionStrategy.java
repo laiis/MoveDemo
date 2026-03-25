@@ -2,6 +2,7 @@ package oo.cc.strategies.search;
 
 import oo.cc.nodes.Node;
 import oo.cc.nodes.Space;
+import oo.cc.steps.Direct;
 import oo.cc.strategies.Strategy;
 
 import java.util.ArrayList;
@@ -13,75 +14,77 @@ import java.util.List;
  */
 public class RecursionStrategy implements Strategy {
     private List<Node> nodes;
-    private final int n;
+    private final int n; // 每一側的棋子數
     private int steps = 0;
+    // 使用 set 來避免重複狀態，防止無限遞迴
+    private java.util.Set<List<Node>> visitedStates = new java.util.HashSet<>();
 
     public RecursionStrategy(List<Node> nodes) {
         this.nodes = new ArrayList<>(nodes);
-        this.n = nodes.size() - 1;
+        this.n = (nodes.size() - 1) / 2;
     }
 
     @Override
     public int exec() {
-        if (solve(true)) { // 從左邊開始移動
+        if (solve()) {
             return steps;
         }
         return -1; // 求解失敗
     }
 
-    private boolean solve(boolean isLeftTurn) {
+    private boolean solve() {
         if (isFinished()) {
             return true;
         }
 
+        // 防止因迴圈路徑導致的無限遞迴
+        if (!visitedStates.add(new ArrayList<>(nodes))) {
+            return false;
+        }
+
         int spaceIdx = findSpace();
         
-        // 嘗試所有可能的移動（滑動或跳躍）
-        // 根據 PieceRule：
-        // 左側棋子 (i < spaceIdx) 往右移 (i+1 或 i+2)
-        // 右側棋子 (i > spaceIdx) 往左移 (i-1 或 i-2)
-        
-        // 這裡需要實作規則導向的試錯
-        // 簡化實作：嘗試所有與空格相鄰或跳躍的合法移動
-        int[] targets = {spaceIdx - 1, spaceIdx - 2, spaceIdx + 1, spaceIdx + 2};
-        
-        for (int i : targets) {
-            if (i < 0 || i >= nodes.size()) continue;
-            
-            // 檢查輪替與方向規則 (T030)
-            if (isLeftTurn && i > spaceIdx) continue; // 左輪替時不能動右側
-            if (!isLeftTurn && i < spaceIdx) continue; // 右輪替時不能動左側
+        // 嘗試所有可能的合法移動 (無論棋子在哪一側)
+        for (int from = 0; from < nodes.size(); from++) {
+            if (nodes.get(from) instanceof Space) continue;
 
-            if (canMove(i, spaceIdx)) {
-                move(i, spaceIdx);
+            if (canMove(from, spaceIdx)) {
+                move(from, spaceIdx);
                 steps++;
                 
-                // 遞迴下一層，切換輪替 (T030)
-                if (solve(!isLeftTurn)) {
+                if (solve()) {
                     return true;
                 }
                 
-                // 回溯 (T031)
-                undoMove(i, spaceIdx);
+                // 回溯
+                undoMove(from, spaceIdx);
                 steps--;
             }
         }
+        
+        // 從訪問過的狀態中移除，以便其他路徑可以訪問此狀態
+        visitedStates.remove(new ArrayList<>(nodes));
         
         return false;
     }
 
     private boolean canMove(int from, int to) {
         // T029: 實作移動規則判斷
-        int dist = Math.abs(from - to);
-        if (dist > 2) return false;
+        Node fromNode = nodes.get(from);
+        if (!(nodes.get(to) instanceof Space)) return false;
         
-        // 左側只能往右移，右側只能往左移
-        if (from < to && nodes.get(from).getClass().getSimpleName().equals("RightNode")) return false; // 假設有 RightNode/LeftNode 區分，或以索引判斷
-        // 但目前 Node 模型中可能沒有方向屬性，需依賴初始位置。
-        // 根據題目：N 個左棋子，1 個空格，N 個右棋子。
-        // 暫時以初始 index < n/2 或 > n/2 判定，但在移動後這會失效。
-        // 我們應該檢查 Node 的屬性。
-        return true; 
+        int dist = to - from;
+        
+        // LEFT 棋子只能右移 (dist > 0)
+        if (fromNode.getDirect() == Direct.LEFT) {
+            return dist == 1 || dist == 2;
+        } 
+        // RIGHT 棋子只能左移 (dist < 0)
+        else if (fromNode.getDirect() == Direct.RIGHT) {
+            return dist == -1 || dist == -2;
+        }
+        
+        return false; 
     }
 
     private void move(int from, int to) {
@@ -102,8 +105,17 @@ public class RecursionStrategy implements Strategy {
     }
 
     private boolean isFinished() {
-        // 所有原左側棋子在空格右邊，原右側棋子在空格左邊
-        // 需根據步數公式 n*(n+2) 或最終狀態判斷
-        return steps == n * (n + 2);
+        // 判斷最終狀態：[R...R, S, L...L]
+        // 1. 左邊 n 個應該是 Direct.RIGHT
+        for (int i = 0; i < n; i++) {
+            if (nodes.get(i).getDirect() != Direct.RIGHT) return false;
+        }
+        // 2. 中間索引 n 應該是 Space
+        if (!(nodes.get(n) instanceof Space)) return false;
+        // 3. 右邊 n 個應該是 Direct.LEFT
+        for (int i = n + 1; i < nodes.size(); i++) {
+            if (nodes.get(i).getDirect() != Direct.LEFT) return false;
+        }
+        return true;
     }
 }

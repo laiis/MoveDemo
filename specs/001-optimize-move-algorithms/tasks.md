@@ -113,15 +113,15 @@ description: "優化移動演算法並探索替代實作的任務清單"
 ### Tests for User Story 4
 
 - [X] T026 [P] [US4] 撰寫針對 PieceRule 輪替規則的驗證測試於 src/test/java/oo/cc/PieceRuleTest.java
-- [ ] T027 [P] [US4] 在 StrategyTest.java 中新增對 RecursionStrategy 的驗證
+- [X] T027 [P] [US4] 在 StrategyTest.java 中新增對 RecursionStrategy 的驗證
 
 ### Implementation for User Story 4
 
 - [X] T028 [P] [US4] 建立 RecursionStrategy 於 src/main/java/oo/cc/strategies/search/RecursionStrategy.java
-- [ ] T029 [US4] 實作基於 PieceRule.md 的狀態移轉邏輯（含滑動與跳躍）
-- [ ] T030 [US4] 實作「左右輪替」與「每回合移動一次」的移動限制邏輯
-- [ ] T031 [US4] 實作「回退至上上一步」的遞迴回溯機制
-- [ ] T032 [US4] 在 Main.java 中整合 RecursionStrategy 至演算法選單
+- [X] T029 [US4] 實作基於 PieceRule.md 的狀態移轉邏輯（含滑動與跳躍）
+- [X] T030 [US4] 實作「左右輪替」與「每回合移動一次」的移動限制邏輯
+- [X] T031 [US4] 實作「回退至上上一步」的遞迴回溯機制
+- [X] T032 [US4] 在 Main.java 中整合 RecursionStrategy 至演算法選單
 
 **Checkpoint**: 使用者故事 4 已完成，成功實作第二種基於規則的移動演算法
 
