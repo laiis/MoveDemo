@@ -17,4 +17,4 @@ Extended question:
 If we replace the white pieces with lowercase English letters and the black pieces with uppercase English letters, please list the number of steps and the moves for all letters from 1 to 26.
 
 
-ref: <個人移位跳棋遊戲的探討>, https://twsf.ntsec.gov.tw/activity/race-1/41/%B0%EA%A4%A4%B2%D5/%BC%C6%BE%C7%AC%EC/4303.pdf
+ref: [個人移位跳棋遊戲的探討](https://www.ntsec.edu.tw/science/detail.aspx?a=21&cat=38&sid=402)
