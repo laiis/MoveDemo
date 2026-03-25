@@ -31,7 +31,7 @@ public class StrategyTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 4, 5})
+    @ValueSource(ints = {1, 2, 3, 4, 5, 10, 20})
     @DisplayName("驗證 BFSStrategy 符合 N*(N+2) 公式")
     public void testBFSStrategy(int n) {
         Strategy strategy = new BFSStrategy(NodeFactory.createNodeChain(n));

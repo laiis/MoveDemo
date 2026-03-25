@@ -39,7 +39,38 @@ public class BFSStrategy implements Strategy {
     }
 
     private List<State> getNeighbors(State state) {
-        // 此處仍需實作節點移動邏輯，後續階段將進一步重構
-        return new ArrayList<>();
+        List<State> neighbors = new ArrayList<>();
+        String board = state.board();
+        int spaceIdx = board.indexOf('S');
+        int n = (board.length() - 1) / 2;
+
+        for (int i = 0; i < board.length(); i++) {
+            char piece = board.charAt(i);
+            if (piece == 'S') {
+                continue;
+            }
+
+            int dist = spaceIdx - i;
+
+            // 'L' pieces can only move right (dist > 0)
+            if (piece == 'L' && (dist == 1 || dist == 2)) {
+                String newBoard = swap(board, i, spaceIdx);
+                neighbors.add(new State(newBoard, i, state.g() + 1, 0, state));
+            }
+            // 'R' pieces can only move left (dist < 0)
+            else if (piece == 'R' && (dist == -1 || dist == -2)) {
+                String newBoard = swap(board, i, spaceIdx);
+                neighbors.add(new State(newBoard, i, state.g() + 1, 0, state));
+            }
+        }
+        return neighbors;
+    }
+
+    private String swap(String s, int i, int j) {
+        char[] arr = s.toCharArray();
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+        return new String(arr);
     }
 }
