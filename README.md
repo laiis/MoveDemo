@@ -51,4 +51,3 @@ If we replace the white pieces with lowercase English letters and the black piec
 
 
 ref: [個人移位跳棋遊戲的探討](https://www.ntsec.edu.tw/science/detail.aspx?a=21&cat=38&sid=402)
-
