@@ -4,6 +4,9 @@ import oo.cc.nodes.Node;
 import oo.cc.strategies.Strategy;
 import java.util.*;
 
+/**
+ * 實作 BFS 搜尋演算法以解決 MoveDemo 問題。
+ */
 public class BFSStrategy implements Strategy {
 
     private final List<Node> initialNodes;
@@ -17,7 +20,10 @@ public class BFSStrategy implements Strategy {
         Queue<State> queue = new LinkedList<>();
         Set<String> visited = new HashSet<>();
 
-        State start = new State(SearchUtils.getBoardString(initialNodes), SearchUtils.getSpaceIndex(initialNodes), 0, 0, null);
+        String initialBoard = SearchUtils.getBoardString(initialNodes);
+        int initialSpace = SearchUtils.getSpaceIndex(initialNodes);
+        State start = new State(initialBoard, initialSpace, 0, 0, null);
+        
         queue.add(start);
         visited.add(start.board());
 
@@ -28,7 +34,7 @@ public class BFSStrategy implements Strategy {
                 return current.g();
             }
 
-            for (State neighbor : getNeighbors(current)) {
+            for (State neighbor : SearchUtils.getNeighbors(current)) {
                 if (!visited.contains(neighbor.board())) {
                     visited.add(neighbor.board());
                     queue.add(neighbor);
@@ -36,41 +42,5 @@ public class BFSStrategy implements Strategy {
             }
         }
         return -1;
-    }
-
-    private List<State> getNeighbors(State state) {
-        List<State> neighbors = new ArrayList<>();
-        String board = state.board();
-        int spaceIdx = board.indexOf('S');
-        int n = (board.length() - 1) / 2;
-
-        for (int i = 0; i < board.length(); i++) {
-            char piece = board.charAt(i);
-            if (piece == 'S') {
-                continue;
-            }
-
-            int dist = spaceIdx - i;
-
-            // 'L' pieces can only move right (dist > 0)
-            if (piece == 'L' && (dist == 1 || dist == 2)) {
-                String newBoard = swap(board, i, spaceIdx);
-                neighbors.add(new State(newBoard, i, state.g() + 1, 0, state));
-            }
-            // 'R' pieces can only move left (dist < 0)
-            else if (piece == 'R' && (dist == -1 || dist == -2)) {
-                String newBoard = swap(board, i, spaceIdx);
-                neighbors.add(new State(newBoard, i, state.g() + 1, 0, state));
-            }
-        }
-        return neighbors;
-    }
-
-    private String swap(String s, int i, int j) {
-        char[] arr = s.toCharArray();
-        char temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-        return new String(arr);
     }
 }

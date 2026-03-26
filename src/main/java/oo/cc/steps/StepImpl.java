@@ -94,9 +94,10 @@ public class StepImpl implements Step {
             return false;
         }
 
-        Node target;
-        if (node.getNext() != null && node.getNext().getNext() instanceof Space) {
-            target = node.getNext().getNext();
+        Node next = node.getNext();
+        // 必須跳過不同方向的棋子且目標是空白
+        if (next != null && next.getDirect() != node.getDirect() && !(next instanceof Space) && next.getNext() instanceof Space) {
+            Node target = next.getNext();
             Step.swapWithGap(target, node);
             return true;
         }
@@ -110,9 +111,10 @@ public class StepImpl implements Step {
             return false;
         }
 
-        Node target;
-        if (node.getPrev() != null && node.getPrev().getPrev() instanceof Space) {
-            target = node.getPrev().getPrev();
+        Node prev = node.getPrev();
+        // 必須跳過不同方向的棋子且目標是空白
+        if (prev != null && prev.getDirect() != node.getDirect() && !(prev instanceof Space) && prev.getPrev() instanceof Space) {
+            Node target = prev.getPrev();
             Step.swapWithGap(node, target);
             return true;
         }

@@ -24,7 +24,7 @@ public class TheBestStrategy implements Strategy {
     public int exec() {
         Node space = findNode0();
 
-         Step.showList(space); // 移除 I/O
+        // Step.showList(space); // 移除 I/O
 
         Step step;
         boolean isAllMove = false;

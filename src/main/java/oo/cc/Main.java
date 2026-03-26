@@ -27,7 +27,7 @@ public class Main {
                 runBenchmark(i, "AStar");
             }
             if (i <= 5) { // Recursion is slower
-                runBenchmark(i, "Recursion");
+                runBenchmark(i, "EXHAUSTIVE");
             }
         }
     }

@@ -1,37 +1,43 @@
 package oo.cc.strategies.search;
 
 import oo.cc.nodes.Node;
-import oo.cc.nodes.Space;
 import java.util.List;
 
 /**
- * 定義 A* 演算法的啟發函數。
- * 目標是將左側節點 (Left) 移動到右側，右側節點 (Right) 移動到左側。
- * 啟發函數估算剩餘需要移動的節點數量。
+ * 實作針對 MoveDemo 遊戲的完美啟發函數 (Perfect Heuristic)。
+ * 步數 h(s) = 總距離(s) - 反轉數(s)。
+ * 此函數能精確預測到達目標所需的剩餘步數，使 A* 搜尋效率極大化。
  */
 public class Heuristics {
     public static int getHeuristic(List<Node> nodes) {
-        int misplacedCount = 0;
-        int n = (nodes.size() - 1) / 2;
+        return getHeuristic(SearchUtils.getBoardString(nodes));
+    }
 
-        for (int i = 0; i < nodes.size(); i++) {
-            Node node = nodes.get(i);
-            if (node instanceof Space) continue;
+    public static int getHeuristic(String board) {
+        int n = (board.length() - 1) / 2;
+        
+        long sumTargetL = (long) (n + 1 + 2 * n) * n / 2; // n+1 到 2n 的總和
+        long sumTargetR = (long) (0 + n - 1) * n / 2;     // 0 到 n-1 的總和
+        
+        long currentSumL = 0;
+        long currentSumR = 0;
+        int inversions = 0;
+        int lSeenSoFar = 0;
 
-            // 根據 MoveDemo 規則：
-            // 前半段 (0 到 n-1) 應存放右側節點 (Right)
-            // 後半段 (n+1 到 2n) 應存放左側節點 (Left)
-            
-            boolean isLeftNode = "LEFT".equals(node.getDirect().name());
-            
-            if (i < n) {
-                // 前半段應該是 Right
-                if (isLeftNode) misplacedCount++;
-            } else if (i > n) {
-                // 後半段應該是 Left
-                if (!isLeftNode) misplacedCount++;
+        for (int i = 0; i < board.length(); i++) {
+            char c = board.charAt(i);
+            if (c == 'L') {
+                currentSumL += i;
+                lSeenSoFar++;
+            } else if (c == 'R') {
+                currentSumR += i;
+                inversions += lSeenSoFar;
             }
         }
-        return misplacedCount;
+
+        long distL = sumTargetL - currentSumL;
+        long distR = currentSumR - sumTargetR;
+        
+        return (int) (distL + distR - inversions);
     }
 }

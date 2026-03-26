@@ -18,83 +18,89 @@ import java.util.List;
 public class PieceRuleTest {
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3})
-    @DisplayName("驗證初始排列：長度為 N+1，中間為空白")
+    @ValueSource(ints = {1, 2, 3, 5, 10})
+    @DisplayName("驗證初始排列：長度為 2N+1，中間為空白")
     public void testInitialLayout(int n) {
         List<Node> chain = NodeFactory.createNodeChain(n);
-        Assertions.assertEquals(n + 1, chain.size(), "串列長度應為 N+1");
-        
-        int spaceIndex = n / 2;
+        Assertions.assertEquals(2 * n + 1, chain.size(), "串列長度應為 2N+1");
+
+        // 根據 NodeFactory: n 個 L, 1 個 S, n 個 R
+        int spaceIndex = n; 
         Assertions.assertTrue(chain.get(spaceIndex) instanceof Space, "索引 " + spaceIndex + " 應為空白 (Space)");
-        
-        // 驗證左側棋子向右，右側棋子向左 (根據現有 NodeFactory 實作)
+
+        // 驗證左側棋子為 LEFT (預期向右移動)，右側棋子為 RIGHT (預期向左移動)
         for (int i = 0; i < spaceIndex; i++) {
-            Assertions.assertEquals(Direct.RIGHT, chain.get(i).getDirect(), "左側棋子應向右");
+            Assertions.assertEquals(Direct.LEFT, chain.get(i).getDirect(), "左側棋子應為 LEFT");
         }
         for (int i = spaceIndex + 1; i < chain.size(); i++) {
-            Assertions.assertEquals(Direct.LEFT, chain.get(i).getDirect(), "右側棋子應向左");
+            Assertions.assertEquals(Direct.RIGHT, chain.get(i).getDirect(), "右側棋子應為 RIGHT");
         }
     }
 
     @Test
     @DisplayName("驗證移動規則：滑動與跳躍限制")
     public void testMoveRules() {
-        int n = 3; // O O _ X X (N=4? 不，NodeFactory.createNodeChain(3) 會產生 4 個節點？)
-        // 根據現有 NodeFactory.createNodeChain(n):
-        // N=1: [R] [S]
-        // N=2: [R] [S] [L]
-        // N=3: [R] [R] [S] [L]
-        // 讓我們檢查一下 NodeFactory 的行為
-        List<Node> chain = NodeFactory.createNodeChain(3);
-        
+        int n = 3; 
+        List<Node> chain = NodeFactory.createNodeChain(n);
+
         // 找到空白節點
         Node space = null;
-        for(Node node : chain) if(node instanceof Space) space = node;
-        
+        for (Node node : chain) if (node instanceof Space) space = node;
+
         Assertions.assertNotNull(space);
-        
-        // 驗證相鄰滑動：空白左邊的 RIGHT 棋子應可向右滑動
-        Node leftNode = space.getPrev();
-        if (leftNode != null && leftNode.getDirect() == Direct.RIGHT) {
-            Step step = new StepImpl(leftNode);
-            Assertions.assertTrue(step.move(), "左側向右棋子應可滑動至空格");
+
+        // 驗證相鄰滑動：空白左邊的 LEFT 棋子應可向右滑動
+        Node leftOfSpace = space.getPrev();
+        if (leftOfSpace != null && leftOfSpace.getDirect() == Direct.LEFT) {
+            Step step = new StepImpl(leftOfSpace);
+            Assertions.assertTrue(step.move(), "左側 LEFT 棋子應可滑動至右側空格");
+        }
+
+        // 驗證相鄰滑動：空白右邊的 RIGHT 棋子應可向左滑動
+        // 重新獲取 chain 因為 swap 可能改變了位置
+        chain = NodeFactory.createNodeChain(n);
+        for (Node node : chain) if (node instanceof Space) space = node;
+        Node rightOfSpace = space.getNext();
+        if (rightOfSpace != null && rightOfSpace.getDirect() == Direct.RIGHT) {
+            Step step = new StepImpl(rightOfSpace);
+            Assertions.assertTrue(step.move(), "右側 RIGHT 棋子應可滑動至左側空格");
         }
     }
 
     @Test
-    @DisplayName("驗證輪替移動原則 (US4 核心)")
-    public void testRotationPrinciple() {
-        // 這是一個邏輯驗證，RecursionStrategy 必須遵守：
-        // 1. 左邊動 -> 2. 右邊動 -> 3. 左邊動 ...
-        // 我們將在實作 RecursionStrategy 時透過此測試確保其遵循此模式
-        
-        // 此處先定義期望的行為模式
-        List<Direct> moveHistory = new ArrayList<>();
-        
-        // 模擬一個符合規則的序列 (範例)
-        moveHistory.add(Direct.RIGHT); // 左側動
-        moveHistory.add(Direct.LEFT);  // 右側動
-        moveHistory.add(Direct.RIGHT); // 左側動
-        
-        for (int i = 1; i < moveHistory.size(); i++) {
-            Assertions.assertNotEquals(moveHistory.get(i-1), moveHistory.get(i), "棋子移動應左右交替");
-        }
+    @DisplayName("驗證跳躍限制：不可跳過同色棋子")
+    public void testJumpRestriction() {
+        // 初始狀態: L L L S R R R (n=3)
+        // L 棋子 (index 1) 前方 (index 2) 是 L，跳過它到 index 3 (S) 應被禁止
+        int n = 3;
+        List<Node> chain = NodeFactory.createNodeChain(n);
+
+        // 嘗試讓 index 1 的 L 棋子跳過 index 2 的 L 棋子到達 index 3 (Space)
+        Node lPiece = chain.get(1); 
+        Step step = new StepImpl(lPiece);
+
+        // 根據新規範，此動作應回傳 false
+        boolean canJump = step.move(); 
+
+        Assertions.assertFalse(canJump, "棋子不應跳過相同顏色的棋子");
     }
 
     @Test
     @DisplayName("驗證完成條件：左右棋子全數交換")
     public void testCompletionCondition() {
-        int n = 2; // R S L -> L S R (預期完成狀態)
+        int n = 2; 
         List<Node> chain = NodeFactory.createNodeChain(n);
-        
-        // 模擬完成狀態
-        // 注意：這取決於 Step.isAllMove 的實作
-        // 我們假設當所有 Direct.RIGHT 在 Space 右邊，所有 Direct.LEFT 在 Space 左邊時完成
-        
-        // 這裡我們僅驗證 Step.isAllMove 是否能正確識別初始狀態為「未完成」
+
         Node space = null;
-        for(Node node : chain) if(node instanceof Space) space = node;
-        
-        Assertions.assertFalse(Step.isAllMove(space, n/2), "初始狀態不應視為已完成");
+        int spaceIndex = -1;
+        for (int i = 0; i < chain.size(); i++) {
+            if (chain.get(i) instanceof Space) {
+                space = chain.get(i);
+                spaceIndex = i;
+                break;
+            }
+        }
+
+        Assertions.assertFalse(Step.isAllMove(space, spaceIndex), "初始狀態不應視為已完成");
     }
 }
